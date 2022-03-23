@@ -1,11 +1,11 @@
-###Hello! This is a Google Forms bot that I made to automate voting for a thing that my high school did. 
+### Hello! This is a Google Forms bot that I made to automate voting for a thing that my high school did. 
 Because Google Forms bots are no longer allowed for this thing, and I would obviously never break the rules, I can no 
 longer use this, but anyone else can for their own purposes.
 
 This tries to act vaguely human-like. To achieve this, instead of sending in as many votes as fast as possible, it sends
 votes in batches on a schedule. The number of votes per batch and the times on the schedule are configurable.
 
-##How to use:
+## How to use:
 Currently, this only works for a Google Form that has one page of only multiple choice questions, and has a required 
 Google login. Additionally, you must have Google Chrome installed. To use it, clone the project using `git clone 
 https://github.com/Angainor64/RinnForTheWinn.git` and make sure you have a python interpreter (Python 3.10+, available
