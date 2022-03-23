@@ -1,5 +1,3 @@
 auth.py
 venv
-r1_for_miles.py
-round_one.py
-counters
+counters/*

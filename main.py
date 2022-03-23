@@ -7,12 +7,10 @@ from selenium.common.exceptions import NoSuchElementException, ElementClickInter
     InvalidSessionIdException
 from selenium.webdriver.common.by import By
 
-from auth import username, password, chromedriver_path
+from auth import *
+from settings import *
 
 
-counter_file = 'counters/r2_counter.txt'
-forms_link = 'https://docs.google.com/forms/d/e/1FAIpQLSc0oujNWcVR94g97P8fEYv4oVSPxsmmA1Pooj0mx78KHtEvPA/viewform'
-picks = [1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 0, 1, 2, 2, 2, 1, 1]
 option = webdriver.ChromeOptions()
 option.add_argument('-incognito')
 option.add_argument('--no-sandbox')
@@ -172,20 +170,14 @@ def day(times: List[int], num_votes: Tuple[int, int], timing_offset_range: Union
 
 
 def main():
-    votes = 20
     offset_range = 3
     curr = int(strftime('%w'))
     while True:
-        if curr == 3:
-            print('It is Wednesday')
-            with open('er_times.txt', 'r') as f:
-                early_release_times = list(map(int, f.read().splitlines()))
-            day(early_release_times, (votes - offset_range, votes + offset_range), 2)
-        else:
-            print('It is not Wednesday')
-            with open('times.txt', 'r') as f:
-                weekday_times = list(map(int, f.read().splitlines()))
-            day(weekday_times, (votes - offset_range, votes + offset_range), 2)
+        times_file = schedules[curr]
+        print(f'Using file {times_file} for today...')
+        with open(times_file, 'r') as f:
+            times = list(map(int, f.read().splitlines()))
+        day(times, (votes_per_batch - offset_range, votes_per_batch + offset_range), 2)
         curr = (curr + 1) % 7
 
 
