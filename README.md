@@ -1,5 +1,5 @@
 ### Hello! This is a Google Forms bot that I made to automate voting for a thing that my high school did. 
-Because Google Forms bots are no longer allowed for this thing, and I would obviously never break the rules, I can no 
+Because Google Forms bots are no longer allowed for said thing, and I would obviously never break the rules, I can no 
 longer use this, but anyone else can for their own purposes.
 
 This tries to act vaguely human-like. To achieve this, instead of sending in as many votes as fast as possible, it sends
