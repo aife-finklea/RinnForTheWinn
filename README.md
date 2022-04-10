@@ -1,4 +1,8 @@
-### Hello! This is a Google Forms bot that I made to automate voting for a thing that my high school did. 
+![GitHub](https://img.shields.io/github/license/Angainor64/RinnForTheWinn)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/selenium)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+### Hello! This is a Google Forms bot that I made to automate voting for a thing that my high school did.
 Because Google Forms bots are no longer allowed for said thing, and I would obviously never break the rules, I can no 
 longer use this, but anyone else can for their own purposes.
 
