@@ -81,7 +81,7 @@ def send_votes(
                         "span/section/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/input",
                     )
                 )
-            )
+            ).send_keys(password)
             browser.find_element(By.ID, "passwordNext").click()  # Find and click "Next"
             print("Logged in!")
 
@@ -219,5 +219,5 @@ def main():
 
 
 if __name__ == "__main__":
-    # send_votes(10, 10, 3)
+    send_votes(10, 10, 3)
     main()
