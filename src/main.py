@@ -43,13 +43,14 @@ def send_votes(
 ) -> None:
     print("Sending votes")
     votes_so_far = 0
+    counter_filepath = f"../{counter_file}"
     try:
-        with open(counter_file, "r") as f:
+        with open(counter_filepath, "r") as f:
             counter = int(f.read())
     except ValueError:
         counter = 0
     except FileNotFoundError:
-        open(counter_file, "x").close()
+        open(counter_filepath, "x").close()
         counter = 0
     while votes_so_far < num_votes:
         try:
@@ -155,7 +156,7 @@ def send_votes(
             continue
     if "browser" in locals():
         browser.close()
-    with open(counter_file, "w") as f:
+    with open(counter_filepath, "w") as f:
         f.write(str(counter))
 
 
@@ -196,4 +197,5 @@ def main():
 
 
 if __name__ == "__main__":
+    send_votes(10, 10, 3)
     main()
