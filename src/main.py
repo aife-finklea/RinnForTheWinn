@@ -7,8 +7,11 @@ from selenium.common.exceptions import (
     NoSuchElementException,
     ElementClickInterceptedException,
     InvalidSessionIdException,
+    TimeoutException,
 )
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait as Wait
+from selenium.webdriver.support.expected_conditions import presence_of_element_located, element_to_be_clickable
 
 from auth import *
 from settings import *
@@ -59,65 +62,41 @@ def send_votes(
             browser.get(forms_link)
 
             # Sign in
-            next_button = browser.find_element(by=By.ID, value="identifierNext")
+            next_button = Wait(browser, 10).until(element_to_be_clickable((By.ID, "identifierNext")))
             textbox = browser.find_element(by=By.XPATH, value='//*[@id="identifierId"]')
             textbox.send_keys(username)
             next_button.click()
-            sleep(3)
 
             # Password
-            error_ct = 0
-            while True:
-                try:
-                    next_button = browser.find_element(by=By.ID, value="passwordNext")
-                    textbox = browser.find_element(
-                        by=By.XPATH,
-                        value="/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/"
-                        "form/span/section/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/input",
-                    )
-                    textbox.send_keys(password)
-                    next_button.click()
-                    break
-                except NoSuchElementException as e:
-                    if error_ct > 5:
-                        raise e
-                    else:
-                        error_ct += 1
-                        sleep(0.5)
+            next_button = Wait(browser, 10).until(element_to_be_clickable((By.ID, "passwordNext")))
+            textbox = browser.find_element(
+                by=By.XPATH,
+                value="/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/"
+                "form/span/section/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/input",
+            )
+            textbox.send_keys(password)
+            next_button.click()
             print("Logged in!")
-            sleep(5)
+
+            # Doing the actual voting
             reloads_in_a_row = 0
             try:
                 while votes_so_far < num_votes:
-                    error_ct = 0
-                    while True:
-                        try:
-                            submit = browser.find_element(
-                                by=By.XPATH,
-                                value="/html/body/div/div[2]/form/div[2]/div/div[3]/div/div[1]/div",
-                            )
-                            for i in range(len(picks)):
-                                if picks[i] == 0:
-                                    continue
-                                question = i + 1
-                                answer = picks[i]
-                                browser.find_element(
-                                    by=By.XPATH,
-                                    value=f'//*[@id="mG61Hd"]/div[2]/div/div[2]/div[{question}]/'
-                                    f"div/div/div[2]/div[1]/div/span/div/div[{answer}]/label",
-                                ).click()
-                            break
-                        except NoSuchElementException as e:
-                            if error_ct > 5:
-                                raise e
-                            else:
-                                error_ct += 1
-                                sleep(0.5)
+                    submit = Wait(browser, 10).until(element_to_be_clickable((By.XPATH, "/html/body/div/div[2]/form/div[2]/div/div[3]/div/div[1]/div")))
+                    for i in range(len(picks)):
+                        if picks[i] == 0:
+                            continue
+                        question = i + 1
+                        answer = picks[i]
+                        browser.find_element(
+                            by=By.XPATH,
+                            value=f'//*[@id="mG61Hd"]/div[2]/div/div[2]/div[{question}]/'
+                            f"div/div/div[2]/div[1]/div/span/div/div[{answer}]/label",
+                        ).click()
+                        del answer  # For debugging reasons
+
                     submit.click()
-                    browser.find_element(
-                        By.XPATH,
-                        value="/html/body/div[1]/div[2]/div[1]/div/div[4]/a[2]",
-                    ).click()
+                    Wait(browser, 10).until(presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div[1]/div/div[4]/a[2]"))).click()  # Click "Submit another response"
                     counter += 1
                     votes_so_far += 1
                     reloads_in_a_row = 0
@@ -126,32 +105,29 @@ def send_votes(
                         print(f"Delay for {delay + offset} seconds...")
                         sleep(delay + offset)
             except NoSuchElementException:
+                if "answer" in locals():
+                    print(f"Could not find element {answer}")
+                elif "submit" in locals():
+                    print("Could not find \"Submit another response\" button")
+                else:
+                    print("Could not find submit button")
                 if reloads_in_a_row < 5:
                     reloads_in_a_row += 1
                     print(f"Error. Reloading for the {reloads_in_a_row}th time...")
                     browser.refresh()
-                    sleep(3)
                 else:
                     raise TooManyReloadsException()
-            except ElementClickInterceptedException:
+            except ElementClickInterceptedException or TimeoutException:
                 if reloads_in_a_row < 5:
                     reloads_in_a_row += 1
                     print(f"Error. Reloading for the {reloads_in_a_row}th time...")
                     browser.refresh()
-                    sleep(3)
                 else:
                     raise TooManyReloadsException()
         except TooManyReloadsException:
             print("Too many errors in a row. Restarting...")
             if "browser" in locals():
                 browser.close()
-            continue
-        except Exception:
-            print("Restarting because of big error...")
-            try:
-                browser.close()
-            except InvalidSessionIdException:
-                pass
             continue
     if "browser" in locals():
         browser.close()
@@ -196,4 +172,5 @@ def main():
 
 
 if __name__ == "__main__":
+    # send_votes(10, 10, 3)
     main()
