@@ -187,7 +187,7 @@ def main():
     offset_range = 3
     curr = int(strftime("%w"))
     while True:
-        times_file = schedules[curr]
+        times_file = f"..\\times\\{schedules[curr]}"
         print(f"Using file {times_file} for today...")
         with open(times_file, "r") as f:
             times = list(map(int, f.read().splitlines()))
