@@ -6,16 +6,17 @@ from selenium import webdriver
 from selenium.common.exceptions import (
     NoSuchElementException,
     ElementClickInterceptedException,
-    InvalidSessionIdException,
     TimeoutException,
 )
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.expected_conditions import (
+    presence_of_element_located,
+    element_to_be_clickable,
+)
 from selenium.webdriver.support.ui import WebDriverWait as Wait
-from selenium.webdriver.support.expected_conditions import presence_of_element_located, element_to_be_clickable
 
 from auth import *
 from settings import *
-
 
 option = webdriver.ChromeOptions()
 option.add_argument("-incognito")
@@ -62,13 +63,17 @@ def send_votes(
             browser.get(forms_link)
 
             # Sign in
-            next_button = Wait(browser, 10).until(element_to_be_clickable((By.ID, "identifierNext")))
+            next_button = Wait(browser, 10).until(
+                element_to_be_clickable((By.ID, "identifierNext"))
+            )
             textbox = browser.find_element(by=By.XPATH, value='//*[@id="identifierId"]')
             textbox.send_keys(username)
             next_button.click()
 
             # Password
-            next_button = Wait(browser, 10).until(element_to_be_clickable((By.ID, "passwordNext")))
+            next_button = Wait(browser, 10).until(
+                element_to_be_clickable((By.ID, "passwordNext"))
+            )
             textbox = browser.find_element(
                 by=By.XPATH,
                 value="/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/"
@@ -82,7 +87,14 @@ def send_votes(
             reloads_in_a_row = 0
             try:
                 while votes_so_far < num_votes:
-                    submit = Wait(browser, 10).until(element_to_be_clickable((By.XPATH, "/html/body/div/div[2]/form/div[2]/div/div[3]/div/div[1]/div")))
+                    submit = Wait(browser, 10).until(
+                        element_to_be_clickable(
+                            (
+                                By.XPATH,
+                                "/html/body/div/div[2]/form/div[2]/div/div[3]/div/div[1]/div",
+                            )
+                        )
+                    )
                     for i in range(len(picks)):
                         if picks[i] == 0:
                             continue
@@ -96,7 +108,14 @@ def send_votes(
                         del answer  # For debugging reasons
 
                     submit.click()
-                    Wait(browser, 10).until(presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div[1]/div/div[4]/a[2]"))).click()  # Click "Submit another response"
+                    Wait(browser, 10).until(
+                        presence_of_element_located(
+                            (
+                                By.XPATH,
+                                "/html/body/div[1]/div[2]/div[1]/div/div[4]/a[2]",
+                            )
+                        )
+                    ).click()  # Click "Submit another response"
                     counter += 1
                     votes_so_far += 1
                     reloads_in_a_row = 0
@@ -108,7 +127,7 @@ def send_votes(
                 if "answer" in locals():
                     print(f"Could not find element {answer}")
                 elif "submit" in locals():
-                    print("Could not find \"Submit another response\" button")
+                    print('Could not find "Submit another response" button')
                 else:
                     print("Could not find submit button")
                 if reloads_in_a_row < 5:
