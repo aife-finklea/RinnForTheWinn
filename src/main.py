@@ -48,7 +48,7 @@ def send_votes(
 ) -> None:
     print("Sending votes")
     votes_so_far = 0
-    counter_filepath = f"../{counter_file}"
+    counter_filepath = f"../counters/{counter_file}"
     try:
         with open(counter_filepath, "r") as f:
             counter = int(f.read())
@@ -220,5 +220,4 @@ def main():
 
 
 if __name__ == "__main__":
-    send_votes(10, 10, 3)
     main()

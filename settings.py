@@ -1,4 +1,4 @@
-counter_file = "../counters/r2_counter.txt"
+counter_file = "r2_counter.txt"
 picks = [2, 1]
 votes_per_batch = 10
 schedules = [
