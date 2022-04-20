@@ -114,7 +114,7 @@ def send_votes(
 
                     # Click "Submit another response"
                     try:
-                        Wait(browser, 1).until(
+                        Wait(browser, 10).until(
                             presence_of_element_located(
                                 (
                                     By.XPATH,
@@ -202,7 +202,7 @@ def main():
     time_offset_range = 2
     curr = int(strftime("%w"))
     while True:
-        times_file = f"../times/{schedules[curr]}"
+        times_file = f"..\\times\\{schedules[curr]}"
         print(f"Using file {times_file} for today...")
         with open(times_file, "r") as f:
             times = list(map(int, f.read().splitlines()))
@@ -220,5 +220,4 @@ def main():
 
 
 if __name__ == "__main__":
-    send_votes(10, 10, 2)
     main()
