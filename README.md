@@ -20,7 +20,7 @@ at [python.org](https://www.python.org/downloads)). Then, do the following:
 You should see something that says "Chrome is up-to-date". If you don't, restart Google Chrome. Then, make a note of the
 version number of Google Chrome (should look something like 99.0.4844.82). Go to 
 [this page](https://chromedriver.chromium.org/downloads) and download the correct version of ChromeDriver for your
-version of Google Chrome. Make a note of the download location, you'll need it for step 4. 
+version of Google Chrome. Make a note of the download location, you'll need it for step 3. 
 3. Create a new file called `auth.py` (outside of `src`) and insert:
 ```python
 username = '{your Google email}'
